@@ -1,13 +1,24 @@
-const phrase = "TypeScript-is-a-powerful-language-for-static-type-checking-and-enhances-productivity-and-readability-of-code.";
-const wordCount = new Map<string, number>();
-const words = phrase.split("-");
+function partition(vehicles: number[], low: number, high: number): number {
+    let pivot = vehicles[high];
+    let i = low - 1;
+    for (let j = low; j < high; j++) {
+        if (vehicles[j] < pivot) {
+            i++;
+            [vehicles[i], vehicles[j]] = [vehicles[j], vehicles[i]];
+        }
+    }
+    [vehicles[i + 1], vehicles[high]] = [vehicles[high], vehicles[i + 1]];
+    return i + 1;
+}
 
-for (const word of words) {
-    if (wordCount.has(word)) {
-        wordCount.set(word, wordCount.get(word)! + 1);
-    } else {
-        wordCount.set(word, 1);
+function quickSortCars(vehicles: number[], low: number, high: number): void {
+    if (low < high) {
+        let pi = partition(vehicles, low, high);
+        quickSortCars(vehicles, low, pi - 1);
+        quickSortCars(vehicles, pi + 1, high);
     }
 }
 
-console.log(wordCount);
+let toyCars: number[] = [2, 9, 5, 1, 6, 3];
+quickSortCars(toyCars, 0, toyCars.length - 1);
+console.log(toyCars);
