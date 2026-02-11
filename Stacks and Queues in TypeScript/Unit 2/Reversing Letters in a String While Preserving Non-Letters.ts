@@ -1,3 +1,5 @@
+export {};
+
 function reverseOnlyLetters(str: string): string {
     let stack: string[] = [];
   
