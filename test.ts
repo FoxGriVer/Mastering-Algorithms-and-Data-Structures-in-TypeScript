@@ -1,31 +1,51 @@
-function reverseOnlyLetters(str: string): string {
-    let stack: string[] = [];
-  
-    for (let char of str) {
-        if (/^[a-zA-Z]/.test(char)) {
-            stack.push(char);
-        }
+class Queue<T> {
+    private data: T[] = []; // A queue is constructed as an array
+
+    enqueue(element: T): void { 
+        this.data.push(element); // The push() method adds an element at the end
     }
-  
-    let result: string = '';
-    
-    for (let char of str) {
-      if (/^[a-zA-Z]/.test(char)) {
-        result += stack.pop();
-      } else {
-        result += char;
-      }
+
+    dequeue(): T | string {
+        if (this.isEmpty()) 
+            return "Underflow"; // If the queue is empty, it returns "Underflow"
+        return this.data.shift() as T; // The shift() method removes an element from the start
     }
-  
-    return result;
+
+    isEmpty(): boolean {
+        return !this.data.length; // The length property checks if the queue is empty
+    }
+
+    getSize(): number {
+        return this.data.length;
+    }
 }
 
-// Testing
-let str1: string = "a-bC-dEf-ghIj";
-console.log(reverseOnlyLetters(str1)); // Expected: "j-Ih-gfE-dCba"
+class MovingAverage {
+    private size: number;
+    private window: Queue<number>;
+    private sum: number;
 
-let str2: string = "TesT1-2";
-console.log(reverseOnlyLetters(str2)); // Expected: "TseT1-2"
+    constructor(size: number) {
+        this.size = size;
+        this.window = new Queue<number>();
+        this.sum = 0.0;
+    }
 
-let str3: string = "abcd";
-console.log(reverseOnlyLetters(str3)); // Expected: "dcba"
+    next(val: number): number {
+       // TODO: add the new value to the queue
+       this.window.enqueue(val);
+       this.sum += val;
+       // TODO: calcualte the new average
+       if (this.window.getSize() > this.size) {
+        this.sum -= this.window.dequeue() as number;
+       }
+
+       return this.sum / this.window.getSize();
+    }
+}
+
+const movingAvg = new MovingAverage(3);
+console.log(movingAvg.next(1));     // returns 1.0
+console.log(movingAvg.next(10));    // returns 5.5
+console.log(movingAvg.next(3));     // returns 4.66667
+console.log(movingAvg.next(5));     // returns 6.0
