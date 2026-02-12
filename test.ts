@@ -1,51 +1,68 @@
-class Queue<T> {
-    private data: T[] = []; // A queue is constructed as an array
+class ListNode<T> {
+    value: T;
+    next: ListNode<T> | null;
 
-    enqueue(element: T): void { 
-        this.data.push(element); // The push() method adds an element at the end
-    }
-
-    dequeue(): T | string {
-        if (this.isEmpty()) 
-            return "Underflow"; // If the queue is empty, it returns "Underflow"
-        return this.data.shift() as T; // The shift() method removes an element from the start
-    }
-
-    isEmpty(): boolean {
-        return !this.data.length; // The length property checks if the queue is empty
-    }
-
-    getSize(): number {
-        return this.data.length;
+    constructor(value: T) {
+        this.value = value;
+        this.next = null;
     }
 }
 
-class MovingAverage {
-    private size: number;
-    private window: Queue<number>;
-    private sum: number;
+class LinkedList<T> {
+    head: ListNode<T> | null;
 
-    constructor(size: number) {
-        this.size = size;
-        this.window = new Queue<number>();
-        this.sum = 0.0;
+    constructor() {
+        this.head = null;
     }
 
-    next(val: number): number {
-       // TODO: add the new value to the queue
-       this.window.enqueue(val);
-       this.sum += val;
-       // TODO: calcualte the new average
-       if (this.window.getSize() > this.size) {
-        this.sum -= this.window.dequeue() as number;
-       }
+    append(value: T): void {
+        const newNode = new ListNode(value);
 
-       return this.sum / this.window.getSize();
+        if (this.head === null) {
+            this.head = newNode;
+            return;
+        }
+
+        let currentNode = this.head;
+        while (currentNode.next !== null) {
+            currentNode = currentNode.next;
+        }
+
+        currentNode.next = newNode;
     }
 }
 
-const movingAvg = new MovingAverage(3);
-console.log(movingAvg.next(1));     // returns 1.0
-console.log(movingAvg.next(10));    // returns 5.5
-console.log(movingAvg.next(3));     // returns 4.66667
-console.log(movingAvg.next(5));     // returns 6.0
+function sumOfEverySecondUnique(list: LinkedList<number>): number {
+    if (list.head === null || list.head.next === null) return 0;
+
+    let sum = 0;
+    let index = 0;
+    let currentNode: ListNode<number> | null = list.head;
+    // TODO: Initialize a set to keep track of visited values
+    const seen = new Set<number>();
+
+    while (currentNode !== null) {
+        // TODO: Calculate the sum of values
+        if (!seen.has(currentNode.value)) {
+            seen.add(currentNode.value);
+
+            if (index % 2 === 1) {
+                sum += currentNode.value;
+            }
+        }
+        
+        currentNode = currentNode.next;
+        index++;
+    }
+
+    return sum;
+}
+
+let list = new LinkedList<number>();
+list.append(1);
+list.append(3); // to be counted
+list.append(7);
+list.append(2); // to be counted
+list.append(4);
+list.append(2); // not to be counted, because not unique
+console.log(sumOfEverySecondUnique(list));  // Expected: 5
